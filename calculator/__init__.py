@@ -1,5 +1,3 @@
-def add(a,b):
-    return a + b
-
-def subtract(a,b):
-    return a - b
+from .calculation import Calculation
+from .calculations import Calculations
+from .operations import add, subtract, multiply, divide
