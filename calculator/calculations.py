@@ -1,29 +1,27 @@
 class Calculations:
-    """Manages a history of calculations."""
-
-    history = []  # Class attribute to store past calculations
+    history = []
 
     @classmethod
     def add_calculation(cls, calculation):
-        """
-        Adds a calculation to the history.
-
-        Args:
-            calculation (Calculation): A Calculation instance to store.
-        """
+        """Adds a calculation to history"""
         cls.history.append(calculation)
 
     @classmethod
-    def get_last_calculation(cls):
-        """
-        Retrieves the most recent calculation from history.
-
-        Returns:
-            Calculation or None: The latest Calculation instance, or None if history is empty.
-        """
+    def get_latest(cls):
+        """Returns the latest calculation"""
         return cls.history[-1] if cls.history else None
 
     @classmethod
+    def get_history(cls):
+        """Returns all calculation history"""
+        return cls.history
+
+    @classmethod
     def clear_history(cls):
-        """Clears all stored calculations from history."""
+        """Clears the calculation history"""
         cls.history.clear()
+
+@staticmethod
+def find_by_operation(operation: str):
+    """Retrieve calculations filtered by operation."""
+    return [calc for calc in Calculations.history if calc.operation.__name__ == operation]

@@ -3,7 +3,7 @@
 init-hook='import sys; sys.path.append(".")'
 ignore=.venv,venv # ignores virtual environments to avoid unnecessary linting
 extension-pkg-whitelist=pydantic
-load-plugins=pylint_django
+#load-plugins=pylint_django
 
 [MESSAGES CONTROL]
 # Only show these errors
@@ -18,7 +18,7 @@ output-format=colorized
 reports=yes
 
 # Put a full report at the end of the file
-report-full=no
+# report-full=no
 
 [DESIGN]
 # Maximum number of parents for a class (see R0901).
@@ -49,5 +49,6 @@ method-rgx=[a-z_][a-z0-9_]{2,50}$
 # Module names should have short, all-lowercase names. The use of underscores is discouraged.
 module-rgx=[a-z_][a-z0-9_]{1,30}$
 
-# Class names
+# Allows for more tolerance in character length in code
+max-line-length=120
 
