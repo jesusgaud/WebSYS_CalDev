@@ -4,6 +4,11 @@ from typing import Callable
 class Calculation:
     """Represents a single mathematical calculation between two operands."""
 
+    def __repr__(self):
+        """Returns a string representation of the calculation"""
+        return f"Calculation({self.a}, {self.b}, {self.operation.__name__})"
+
+
     def __init__(self, a: Decimal, b: Decimal, operation: Callable[[Decimal, Decimal], Decimal]):
         """
         Initializes a Calculation instance.
