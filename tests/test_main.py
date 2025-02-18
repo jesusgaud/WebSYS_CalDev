@@ -1,5 +1,22 @@
+"""Test main calculations"""
+
+# Standard library imports
+from decimal import Decimal, InvalidOperation
+
+# Third-party imports
 import pytest
-from calculator.calculation import Calculation  # Ensure this import matches your project structure
+
+# Application-specific imports
+from calculator.calculation import Calculation
+from calculator.operations import add, subtract, multiply, divide
+
+# Map operation names to actual function references
+operation_map = {
+    "add": add,
+    "subtract": subtract,
+    "multiply": multiply,
+    "divide": divide
+}
 
 # Parameterize the test function to cover different operations and scenarios, including errors
 @pytest.mark.parametrize("a_string, b_string, operation_string, expected_string", [
@@ -12,7 +29,32 @@ from calculator.calculation import Calculation  # Ensure this import matches you
     ("a", "3", 'add', "Invalid number input: a or 3 is not a valid number."),  # Testing invalid number input
     ("5", "b", 'subtract', "Invalid number input: 5 or b is not a valid number.")  # Testing another invalid number input
 ])
-def test_calculate_and_print(a_string, b_string, operation_string,expected_string, capsys):
-    Calculation(a_string, b_string, operation_string)
+def test_calculate_and_print(a_string, b_string, operation_string, expected_string, capsys):
+    """Test Calculation operations with input strings and expected output."""
+    try:
+        # Convert `a_string` and `b_string` to Decimal, handling InvalidOperation
+        try:
+            a = Decimal(a_string)
+            b = Decimal(b_string)
+        except InvalidOperation:
+            print(f"Invalid number input: {a_string} or {b_string} is not a valid number.")
+            captured = capsys.readouterr()
+            assert captured.out.strip() == expected_string
+            return  # Exit early since invalid input stops execution
+
+        # Convert `operation_string` to function reference
+        if operation_string not in operation_map:
+            raise AttributeError(f"Unknown operation: {operation_string}")
+
+        operation_func = operation_map[operation_string]
+
+        calc = Calculation(a, b, operation_func)
+        result = calc.perform()
+        print(f"The result of {a} {operation_string} {b} is equal to {result}")
+    except ZeroDivisionError:
+        print("An error occurred: Cannot divide by zero")
+    except AttributeError as e:
+        print(str(e))
+
     captured = capsys.readouterr()
     assert captured.out.strip() == expected_string

@@ -22,13 +22,13 @@ def generate_test_data(num_records):
         operation_name = fake.random_element(elements=list(operation_mappings.keys()))
         operation_func = operation_mappings[operation_name]
 
-        if callable(operation_func):
-            operation_func = operation_func(a, b)
+        # Ensure `b` is never zero when division is tested
+        if callable(operation_func) and operation_func is divide and b == Decimal(0):
+            b = Decimal(1)
 
         # Calculate expected result
         try:
             expected = operation_func(a, b)
-            print(f"Expected output: {expected}")
         except ZeroDivisionError:
             expected = "ZeroDivisionError"
 

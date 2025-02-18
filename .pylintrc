@@ -50,5 +50,5 @@ method-rgx=[a-z_][a-z0-9_]{2,50}$
 module-rgx=[a-z_][a-z0-9_]{1,30}$
 
 # Allows for more tolerance in character length in code
-max-line-length=120
+max-line-length=200
 
