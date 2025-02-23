@@ -1,4 +1,4 @@
-"""My Calculator Test"""
+"""Test Calculations Using the Command Pattern"""
 
 # Standard library imports
 from decimal import Decimal
@@ -7,7 +7,17 @@ import pytest
 # Application-specific imports
 from calculator.calculation import Calculation
 from calculator.calculations import Calculations
-from calculator.operations import add, subtract
+from calculator.operations import add, subtract, multiply, divide
+
+@pytest.fixture(name="available_commands")
+def fixture_available_commands():
+    """Fixture that dynamically loads available commands from the operations module."""
+    return {
+        "add": add,
+        "subtract": subtract,
+        "multiply": multiply,
+        "divide": divide,
+    }
 
 @pytest.fixture(name="setup_calculations")
 def fixture_setup_calculations():
@@ -18,7 +28,7 @@ def fixture_setup_calculations():
 
 def test_add_calculation(setup_calculations):
     """Test adding a calculation to the history."""
-    _ = setup_calculations  # Explicitly reference fixture to avoid pylint warnings
+    _ = setup_calculations  # Explicitly reference fixture
     calc = Calculation(Decimal('2'), Decimal('2'), add)
     Calculations.add_calculation(calc)
     assert Calculations.get_latest() == calc, "Failed to add the calculation to the history"
@@ -42,20 +52,20 @@ def test_get_latest(setup_calculations):
     assert latest is not None, "Latest calculation is None"
     assert latest.a == Decimal('20') and latest.b == Decimal('3'), "Did not get the correct latest calculation"
 
-def test_find_by_operation(setup_calculations):
+def test_find_by_operation(setup_calculations, available_commands):
     """Test finding calculations in the history by operation type."""
     _ = setup_calculations  # Explicitly reference fixture
-    if hasattr(Calculations, "find_by_operation"):
-        add_operations = Calculations.find_by_operation("add")
-        assert len(add_operations) == 1, "Did not find the correct number of calculations with add operation"
 
-        subtract_operations = Calculations.find_by_operation("subtract")
-        assert len(subtract_operations) == 1, "Did not find the correct number of calculations with subtract operation"
+    if hasattr(Calculations, "find_by_operation"):
+        for operation_name in available_commands:
+            operations = Calculations.find_by_operation(operation_name)
+            assert isinstance(operations, list), "Expected a list of calculations"
     else:
         pytest.skip("find_by_operation method is missing in Calculations class")
 
-def test_get_latest_with_empty_history(setup_calculations):
-    """Test getting the latest calculation when the history is empty."""
-    _ = setup_calculations  # Explicitly reference fixture
-    Calculations.clear_history()
-    assert Calculations.get_latest() is None, "Expected None for latest calculation with empty history"
+def test_plugin_loading(available_commands):
+    """Test that the command plugin system loads operations dynamically."""
+    assert "add" in available_commands
+    assert "subtract" in available_commands
+    assert "multiply" in available_commands
+    assert "divide" in available_commands

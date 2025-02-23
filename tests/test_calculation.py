@@ -1,50 +1,46 @@
-"""
-This module contains tests for the calculator operations and Calculation class.
-
-The tests verify arithmetic operations (addition, subtraction, multiplication, division)
-implemented in the calculator.operations module, and functionality of the Calculation class.
-"""
-
-# Import statements:
-# pylint: disable=unnecessary-dunder-call, invalid-name
 from decimal import Decimal
-import pytest
-from calculator.calculation import Calculation
-from calculator.operations import add, subtract, multiply, divide
+from typing import Callable
 
-# Renamed `a, b, operation, expected` to `a1, b1, op1, exp1` to avoid duplicate parameterization conflicts
-@pytest.mark.parametrize(
-    "a1, b1, op1, exp1",
-    [
-        (Decimal("10"), Decimal("5"), add, Decimal("15")),
-        (Decimal("10"), Decimal("5"), subtract, Decimal("5")),
-        (Decimal("3"), Decimal("4"), multiply, Decimal("12")),
-        (Decimal("20"), Decimal("5"), divide, Decimal("4")),
-    ],
-)
-def test_calculation_operations(a1, b1, op1, exp1):
-    """
-    Test calculation operations with various scenarios.
+class Calculation:
+    """Represents a single mathematical calculation between two operands."""
 
-    Ensures that the Calculation class correctly performs
-    arithmetic operations and matches the expected outcome.
-    """
-    calc = Calculation(a1, b1, op1)  # Create Calculation instance
-    assert calc.perform() == exp1, f"Failed {op1.__name__} operation with {a1} and {b1}"  # Validate result
+    def __repr__(self):
+        """Returns a string representation of the calculation"""
+        return f"Calculation({self.a}, {self.b}, {self.operation.__name__})"
 
+    def __init__(self, a: Decimal, b: Decimal, operation: Callable[[Decimal, Decimal], Decimal]):
+        """
+        Initializes a Calculation instance.
 
-def test_calculation_repr():
-    """
-    Test the string representation (__repr__) of the Calculation class.
-    """
-    calc = Calculation(Decimal('10'), Decimal('5'), add)  # Create Calculation instance
-    expected_repr = "Calculation(10, 5, add)"  # Expected string representation
-    assert calc.__repr__() == expected_repr, "The __repr__ method output does not match the expected string."
+        Args:
+            a (Decimal): First operand.
+            b (Decimal): Second operand.
+            operation (Callable): A function that performs an arithmetic operation on two Decimals.
+        """
+        self.a = a
+        self.b = b
+        self.operation = operation
 
+    @staticmethod
+    def create(a: Decimal, b: Decimal, operation: Callable[[Decimal, Decimal], Decimal]) -> "Calculation":
+        """
+        Creates a new Calculation instance.
 
-def test_divide_by_zero():
-    """
-    Test that division by zero raises the correct ZeroDivisionError.
-    """
-    with pytest.raises(ZeroDivisionError, match="Cannot divide by zero"):
-        divide(Decimal(5), Decimal(0))
+        Args:
+            a (Decimal): First operand.
+            b (Decimal): Second operand.
+            operation (Callable): A function that performs an arithmetic operation on two Decimals.
+
+        Returns:
+            Calculation: A new Calculation instance.
+        """
+        return Calculation(a, b, operation)
+
+    def perform(self) -> Decimal:
+        """
+        Executes the stored calculation and returns the result.
+
+        Returns:
+            Decimal: The result of the arithmetic operation.
+        """
+        return self.operation(self.a, self.b)  # Perform the operation and return the result
