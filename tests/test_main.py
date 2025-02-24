@@ -8,32 +8,22 @@ import pytest
 
 # Application-specific imports
 from calculator.calculation import Calculation
-from calculator.operations import add, subtract, multiply, divide
+from calculator.operations import operations  # Import dynamically loaded operations
 
-# Plugin-based command loading
-def get_available_commands():
-    """Dynamically loads available commands from the operations module."""
-    return {
-        "add": add,
-        "subtract": subtract,
-        "multiply": multiply,
-        "divide": divide,
-    }
-
-# Parameterize the test function to cover different operations and scenarios, including errors
 @pytest.mark.parametrize("a_string, b_string, operation_string, expected_string", [
-    ("5", "3", 'add', "The result of 5 add 3 is equal to 8"),
-    ("10", "2", 'subtract', "The result of 10 subtract 2 is equal to 8"),
-    ("4", "5", 'multiply', "The result of 4 multiply 5 is equal to 20"),
-    ("20", "4", 'divide', "The result of 20 divide 4 is equal to 5"),
-    ("1", "0", 'divide', "An error occurred: Cannot divide by zero"),
-    ("9", "3", 'unknown', "Unknown operation: unknown"),
-    ("a", "3", 'add', "Invalid number input: a or 3 is not a valid number."),
-    ("5", "b", 'subtract', "Invalid number input: 5 or b is not a valid number.")
+    ("5", "3", "add", "The result of 5 add 3 is equal to 8"),
+    ("10", "2", "subtract", "The result of 10 subtract 2 is equal to 8"),
+    ("4", "5", "multiply", "The result of 4 multiply 5 is equal to 20"),
+    ("20", "4", "divide", "The result of 20 divide 4 is equal to 5"),
+    ("10", "3", "modulus", "The result of 10 modulus 3 is equal to 1"),  # Plugin test
+    ("2", "3", "power", "The result of 2 power 3 is equal to 8"),  # Plugin test
+    ("1", "0", "divide", "An error occurred: Cannot divide by zero"),
+    ("9", "3", "unknown", "Unknown operation: unknown"),
+    ("a", "3", "add", "Invalid number input: a or 3 is not a valid number."),
+    ("5", "b", "subtract", "Invalid number input: 5 or b is not a valid number.")
 ])
 def test_calculate_and_print(a_string, b_string, operation_string, expected_string, capsys):
-    """Test Calculation operations with input strings and expected output."""
-    commands = get_available_commands()  # Load available commands dynamically
+    """Test Calculation operations, including dynamically loaded plugins."""
 
     try:
         # Convert inputs to Decimal
@@ -41,10 +31,10 @@ def test_calculate_and_print(a_string, b_string, operation_string, expected_stri
         b = Decimal(b_string)
 
         # Validate operation
-        if operation_string not in commands:
+        if operation_string not in operations:
             raise AttributeError(f"Unknown operation: {operation_string}")
 
-        operation_func = commands[operation_string]
+        operation_func = operations[operation_string]
 
         calc = Calculation(a, b, operation_func)
         result = calc.perform()
