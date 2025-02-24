@@ -8,7 +8,6 @@ class Calculation:
         """Returns a string representation of the calculation"""
         return f"Calculation({self.a}, {self.b}, {self.operation.__name__})"
 
-
     def __init__(self, a: Decimal, b: Decimal, operation: Callable[[Decimal, Decimal], Decimal]):
         """
         Initializes a Calculation instance.
@@ -44,4 +43,4 @@ class Calculation:
         Returns:
             Decimal: The result of the arithmetic operation.
         """
-        return self.operation(self.a, self.b)
+        return self.operation(self.a, self.b)  # Ensure the operation is executed properly

@@ -1,27 +1,33 @@
+from collections import deque
+from decimal import Decimal
+from typing import List, Optional
+from calculator.calculation import Calculation
+
 class Calculations:
-    history = []
+    """Manages a history of calculations using the Command Pattern."""
+    history: deque[Calculation] = deque()
 
     @classmethod
-    def add_calculation(cls, calculation):
-        """Adds a calculation to history"""
+    def add_calculation(cls, calculation: Calculation) -> None:
+        """Adds a calculation to the history."""
         cls.history.append(calculation)
 
     @classmethod
-    def get_latest(cls):
-        """Returns the latest calculation"""
+    def get_latest(cls) -> Optional[Calculation]:
+        """Returns the latest calculation if available."""
         return cls.history[-1] if cls.history else None
 
     @classmethod
-    def get_history(cls):
-        """Returns all calculation history"""
-        return cls.history
+    def get_history(cls) -> List[Calculation]:
+        """Returns the entire calculation history."""
+        return list(cls.history)
 
     @classmethod
-    def clear_history(cls):
-        """Clears the calculation history"""
+    def clear_history(cls) -> None:
+        """Clears the calculation history."""
         cls.history.clear()
 
-@staticmethod
-def find_by_operation(operation: str):
-    """Retrieve calculations filtered by operation."""
-    return [calc for calc in Calculations.history if calc.operation.__name__ == operation]
+    @classmethod
+    def find_by_operation(cls, operation: str) -> List[Calculation]:
+        """Finds calculations based on the operation name."""
+        return [calc for calc in cls.history if calc.operation.__name__ == operation]
