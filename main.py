@@ -1,22 +1,17 @@
-"""Interactive Calculator Using the Command Pattern"""
+"""Interactive Calculator Using the Command Pattern with Multiprocessing"""
 
 import sys
+import multiprocessing
 from decimal import Decimal, InvalidOperation
 from calculator.calculation import Calculation
-from calculator.operations import add, subtract, multiply, divide
+from calculator.operations import operations  # Import dynamically loaded operations
 
-# Dynamically load available commands
 def load_commands():
-    """Dynamically loads available commands from the operations module."""
-    return {
-        "add": add,
-        "subtract": subtract,
-        "multiply": multiply,
-        "divide": divide,
-    }
+    """Dynamically loads available commands, including plugins."""
+    return operations  # Return the entire operations dictionary, including dynamically loaded plugins
 
-def execute_command(a, b, operation):
-    """Executes a mathematical operation using the Command Pattern."""
+def calculate_and_print(a, b, operation):
+    """Performs calculation in a separate process and prints the result."""
     commands = load_commands()
 
     if operation not in commands:
@@ -34,6 +29,12 @@ def execute_command(a, b, operation):
     except InvalidOperation:
         print(f"Invalid number input: {a} or {b} is not a valid number.")
 
+def execute_command(a, b, operation):
+    """Executes a mathematical operation using multiprocessing."""
+    process = multiprocessing.Process(target=calculate_and_print, args=(a, b, operation))
+    process.start()
+    process.join()  # Ensure the process completes before proceeding
+
 def interactive_mode():
     """Runs the calculator in interactive REPL mode."""
     print("Welcome to the Interactive Calculator (type 'exit' to quit, 'menu' for available commands)")
@@ -45,7 +46,7 @@ def interactive_mode():
             print("Exiting calculator. Goodbye!")
             break
         elif user_input == "menu":
-            print("\nAvailable commands:", ", ".join(commands.keys()))
+            print("\nAvailable commands:", ", ".join(commands.keys()))  # Shows dynamically loaded plugins
             continue
 
         parts = user_input.split()
@@ -68,4 +69,5 @@ def main():
         sys.exit(1)
 
 if __name__ == '__main__':
+    multiprocessing.set_start_method("fork")  # Ensure multiprocessing compatibility
     main()
