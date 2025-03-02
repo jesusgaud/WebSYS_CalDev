@@ -7,8 +7,8 @@ from decimal import Decimal, InvalidOperation
 import pytest
 
 # Application-specific imports
-from calculator.calculation import Calculation
-from calculator.operations import operations  # Import dynamically loaded operations
+from app.calculation import Calculation
+from app.operations import operations  # Import dynamically loaded operations
 
 @pytest.mark.parametrize("a_string, b_string, operation_string, expected_string", [
     ("5", "3", "add", "The result of 5 add 3 is equal to 8"),

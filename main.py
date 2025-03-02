@@ -3,8 +3,8 @@
 import sys
 import multiprocessing
 from decimal import Decimal, InvalidOperation
-from calculator.calculation import Calculation
-from calculator.operations import operations  # Import dynamically loaded operations
+from app.calculation import Calculation
+from app.operations import operations  # Import dynamically loaded operations
 
 def load_commands():
     """Dynamically loads available commands, including plugins."""

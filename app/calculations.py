@@ -1,7 +1,7 @@
 from collections import deque
 from decimal import Decimal
 from typing import List, Optional
-from calculator.calculation import Calculation
+from app.calculation import Calculation
 
 class Calculations:
     """Manages a history of calculations using the Command Pattern."""

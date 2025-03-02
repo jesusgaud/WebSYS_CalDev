@@ -5,8 +5,8 @@ from decimal import Decimal
 import pytest
 
 # Application-specific imports
-from calculator.calculation import Calculation
-from calculator.operations import operations  # Import dynamically loaded operations
+from app.calculation import Calculation
+from app.operations import operations  # Import dynamically loaded operations
 
 @pytest.mark.parametrize(
     "x, y, op_name, expected_result",

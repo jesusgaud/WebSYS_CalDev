@@ -2,7 +2,7 @@
 from decimal import Decimal
 import pytest
 from faker import Faker
-from calculator.operations import operations  # Import dynamically loaded operations
+from app.operations import operations  # Import dynamically loaded operations
 
 fake = Faker()
 

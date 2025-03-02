@@ -5,9 +5,9 @@ from decimal import Decimal
 import pytest
 
 # Application-specific imports
-from calculator.calculation import Calculation
-from calculator.calculations import Calculations
-from calculator.operations import operations  # Dynamically loaded operations
+from app.calculation import Calculation
+from app.calculations import Calculations
+from app.operations import operations  # Dynamically loaded operations
 
 @pytest.fixture(name="setup_calculations")
 def fixture_setup_calculations():
