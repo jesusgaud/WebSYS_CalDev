@@ -1,17 +1,18 @@
 [MASTER]
 # A list of file extensions of the files that will be checked for Python code
 init-hook='import sys; sys.path.append(".")'
-ignore=.venv,venv # ignores virtual environments to avoid unnecessary linting
+ignore=.venv,venv  # Ignores virtual environments to avoid unnecessary linting
 extension-pkg-whitelist=pydantic
-#load-plugins=pylint_django
+# load-plugins=pylint_django
 
 [MESSAGES CONTROL]
 # Only show these errors
 # Disable the following checks (example list):
-disable= missing-docstring, invalid-name, unnecessary-dunder-call # disables warnings for missing docstrings, unnecessary dunder calls, and invalid names
+disable=missing-docstring, invalid-name, unnecessary-dunder-call, duplicate-code
+# Added `duplicate-code` to disable warnings about similar lines in multiple files
 
 [REPORTS]
-# Set the output format. Available formats: text, parseable, colorized, json, msvs (visual studio) and html
+# Set the output format. Available formats: text, parseable, colorized, json, msvs (visual studio), and html
 output-format=colorized
 
 # Include a report at the end of the log
@@ -51,4 +52,3 @@ module-rgx=[a-z_][a-z0-9_]{1,30}$
 
 # Allows for more tolerance in character length in code
 max-line-length=200
-

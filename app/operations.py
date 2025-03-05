@@ -1,15 +1,18 @@
 import importlib
 import os
 import sys
+import logging
 from decimal import Decimal
 from typing import Protocol, Dict, Callable
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # Define a protocol (interface) for mathematical operations
 class Operation(Protocol):
     """Defines the interface for all mathematical operations."""
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         """Executes the operation on two operands."""
-        pass
 
 # Implementations for basic operations using the Command Pattern
 class AddOperation:
@@ -77,12 +80,12 @@ def load_plugins():
         if filename.endswith(".py") and filename != "__init__.py":
             module_name = filename[:-3]  # Remove ".py" to get module name
             try:
-                module = importlib.import_module(module_name)
+                module = importlib.import_module(f"app.plugins.{module_name}")
                 if hasattr(module, "operation"):
                     operations[module_name] = module.operation  # Register the plugin
-                    print(f"Loaded plugin: {module_name}")  # Debugging log
-            except Exception as e:
-                print(f"Failed to load plugin {module_name}: {e}")
+                    logging.info("Loaded plugin: %s", module_name)
+            except ImportError as e:
+                logging.error("Failed to load plugin %s: %s", module_name, str(e))
 
 # Load plugins at startup
 load_plugins()
