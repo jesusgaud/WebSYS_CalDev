@@ -5,9 +5,9 @@ from decimal import Decimal
 import pytest
 
 # Application-specific imports
-from calculator.calculator import Calculator
-from calculator.calculations import Calculations
-from calculator.operations import operations  # Dynamically loaded operations
+from app.calculator import Calculator
+from app.calculations import Calculations
+from app.operations import operations  # Dynamically loaded operations
 
 @pytest.fixture(name="clear_history_fixture")
 def fixture_clear_history():
